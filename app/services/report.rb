@@ -1,11 +1,16 @@
 class Report
-  def self.print_default(parsed_info)
+  def self.print_info_by_player(parsed_info_by_player)
     puts "Grouped Information:"
-    puts parsed_info
-    puts "Ranking:"
-    PlayerRanking.new(parsed_info).calculate.each_with_index do |data, i|
+    puts parsed_info_by_player
+    puts "Player Ranking:"
+    PlayerRanking.new(parsed_info_by_player).calculate.each_with_index do |data, i|
       puts "#{i + 1} - #{data.first}: #{data.second}\n"
     end
+  end
+
+  def self.print_info_by_means(parsed_info_by_means)
+    puts "Death by means count:"
+    puts parsed_info_by_means
   end
 
   class PlayerRanking
@@ -20,7 +25,7 @@ class Report
           ranking_hash[k] += v
         end
       end
-      ranking_hash.sort_by { |k, v| v }.reverse
+      ranking_hash.sort_by { |k, v| v }.reverse.to_h
     end
   end
 end
