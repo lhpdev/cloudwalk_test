@@ -5,7 +5,7 @@ require "log_parser"
 RSpec.describe LogParser do
   describe ".generate_grouped_information" do
     subject {
-      LogParser.generate_grouped_information("sample_game_log.log.txt")
+      described_class.generate_grouped_information("sample_game_log.log.txt")
     }
 
     before do
@@ -19,9 +19,9 @@ RSpec.describe LogParser do
     end
   end
 
-  describe "MatchParser" do
+  describe LogParser::MatchParser do
     before do
-      @match_parser = LogParser::MatchParser.new(file_content)
+      @match_parser = described_class.new(file_content)
     end
 
     describe "#parse" do

@@ -45,35 +45,26 @@ class LogParser
     end
 
     def parse_kills(kills)
-      result = {}
-      players = []
-      kills_count = {}
-
-      kills.each do |game_kill|
+      result = kills.each_with_object({
+        "total_kills" => kills.length,
+        "players" => [],
+        "kills" => Hash.new(0)
+      }) do |game_kill, data|
         array = game_kill.split(" ")
         reference_index = array.index("killed")
         killer_player = array[reference_index - 1]
         killed_player = array[reference_index + 1]
+
         if killer_player == "<world>"
-          if kills_count[killed_player].present?
-            kills_count[killed_player]-=1
-          else
-            kills_count[killed_player] = -1
-          end
+          data["kills"][killed_player] -= 1
         else
-          players << killer_player unless players.include?(killer_player)
-          if kills_count[killer_player].present?
-            kills_count[killer_player] += 1
-          else
-            kills_count[killer_player] = 1
-          end
+          data["players"].push(killer_player) unless data["players"].include?(killer_player)
+          data["kills"][killer_player] += 1
         end
-        players << killed_player unless players.include?(killed_player)
+
+        data["players"].push(killed_player) unless data["players"].include?(killed_player)
       end
 
-      result["total_kills"] = kills.length
-      result["players"] = players
-      result["kills"] = kills_count
       result
     end
   end
